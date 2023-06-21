@@ -476,6 +476,14 @@ config_setting(
 )
 
 config_setting(
+    name = "aws_lc",
+    constraint_values = [
+        "@platforms//os:linux",
+    ],
+    values = {"define": "boringssl=aws-lc"},
+)
+
+config_setting(
     name = "boringssl_disabled",
     values = {"define": "boringssl=disabled"},
 )
@@ -531,6 +539,7 @@ alias(
     name = "boringssl",
     actual = select({
         "//bazel:boringssl_fips": "@boringssl_fips//:ssl",
+        "//bazel:aws_lc": "@aws_lc//:ssl",
         "//conditions:default": "@boringssl//:ssl",
     }),
 )
@@ -539,6 +548,7 @@ alias(
     name = "boringcrypto",
     actual = select({
         "//bazel:boringssl_fips": "@boringssl_fips//:crypto",
+        "//bazel:aws_lc": "@aws_lc//:crypto",
         "//conditions:default": "@boringssl//:crypto",
     }),
 )
