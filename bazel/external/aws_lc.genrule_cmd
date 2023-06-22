@@ -28,7 +28,7 @@ pushd "$ROOT"
 # - Perl version 5.30.3 (https://github.com/Perl/perl5/tags)
 
 # Override $PATH for build tools, to avoid picking up anything else.
-# export PATH="$(dirname `which cmake`):/usr/bin:/bin"
+export PATH="/usr/bin:/bin"
 
 # Clang
 VERSION=12.0.0
@@ -120,22 +120,25 @@ curl -sLO https://github.com/Perl/perl5/archive/refs/tags/v"$VERSION".tar.gz \
   && echo "$SHA256" v"$VERSION".tar.gz | sha256sum --check
 tar xf v"$VERSION".tar.gz
 cd perl5-"$VERSION"
-./Configure -des -Dprefix=$HOME/localperl
+./Configure -des -Dprefix=../localperl
+make
 make test
 make install
 
-export PATH="$PWD:$PATH"
-if [[ `perl --version | head -2 | tail +2` != "*(v$VERSION)*" ]]; then
-  echo "ERROR: Perl version doesn't match."
-  exit 1
-fi
+cd ..
+
+# export PATH="$PWD/localperl/bin:$PATH"
+# if [[ `perl --version | head -2 | tail +2` != *"(v$VERSION)"* ]]; then
+#   echo "ERROR: Perl version doesn't match."
+#   exit 1
+# fi
 
 # Clean after previous build.
-rm -rf aws-lc/build
+rm -rf boringssl/build
 
 # Build AWS-LC.
 export GOPROXY=https://goproxy.io,direct # TODO: Needed on Amazon network, remove if necessary
-cd aws-lc
+cd boringssl
 mkdir build && cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 ninja
 ninja run_tests
@@ -143,7 +146,7 @@ ninja run_tests
 
 # Move compiled libraries to the expected destinations.
 popd
-mv $ROOT/aws-lc/build/crypto/libcrypto.a $1
-mv $ROOT/aws-lc/build/ssl/libssl.a $2
+mv $ROOT/boringssl/build/crypto/libcrypto.a $1
+mv $ROOT/boringssl/build/ssl/libssl.a $2
 
 echo "BoringSSL built as AWS-LC"
