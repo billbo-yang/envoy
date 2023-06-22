@@ -144,7 +144,9 @@ REPOSITORY_LOCATIONS_SPEC = dict(
         release_date = "2023-06-20",
         cpe = "N/A",
         license = "Mixed",
-        license_url = "https://github.com/aws/aws-lc/blob/v{version}/LICENSE"
+        license_url = "https://github.com/aws/aws-lc/blob/v{version}/LICENSE",
+        strip_prefix = "aws-lc-{version}",
+        add_preix = "aws-lc",
     ),
     aspect_bazel_lib = dict(
         project_name = "Aspect Bazel helpers",
