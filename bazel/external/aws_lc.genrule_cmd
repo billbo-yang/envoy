@@ -7,6 +7,7 @@ export LDFLAGS=''
 
 # Build AWS-LC as described in https://github.com/aws/aws-lc/blob/main/BUILDING.md
 
+
 OS=`uname`
 ARCH=`uname -m`
 # For the purposes of AWS-LC on Envoy, we will only support Linux x86 and aarch64
@@ -28,7 +29,7 @@ pushd "$ROOT"
 # - Perl version 5.30.3 (https://github.com/Perl/perl5/tags)
 
 # Override $PATH for build tools, to avoid picking up anything else.
-export PATH="/usr/bin:/bin"
+export PATH="$(dirname `which cmake`):/usr/bin:/bin"
 
 # Clang
 VERSION=12.0.0
@@ -113,33 +114,13 @@ if [[ `cmake --version | head -n1` != "cmake version $VERSION" ]]; then
   exit 1
 fi
 
-# Perl
-VERSION=5.30.3
-SHA256=9aabb609bdbeae70fa80ef08337f62f44fccf480e3a5d9b8ea9a0004c6495a02
-curl -sLO https://github.com/Perl/perl5/archive/refs/tags/v"$VERSION".tar.gz \
-  && echo "$SHA256" v"$VERSION".tar.gz | sha256sum --check
-tar xf v"$VERSION".tar.gz
-cd perl5-"$VERSION"
-./Configure -des -Dprefix=../localperl
-make
-make test
-make install
-
-cd ..
-
-# export PATH="$PWD/localperl/bin:$PATH"
-# if [[ `perl --version | head -2 | tail +2` != *"(v$VERSION)"* ]]; then
-#   echo "ERROR: Perl version doesn't match."
-#   exit 1
-# fi
-
 # Clean after previous build.
 rm -rf boringssl/build
 
 # Build AWS-LC.
 export GOPROXY=https://goproxy.io,direct # TODO: Needed on Amazon network, remove if necessary
 cd boringssl
-mkdir build && cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
+mkdir build && cd build && cmake -GNinja -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain -DCMAKE_BUILD_TYPE=Release ..
 ninja
 ninja run_tests
 ./crypto/crypto_test
