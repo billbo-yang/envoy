@@ -9,8 +9,8 @@ export LDFLAGS=''
 
 OS=`uname`
 ARCH=`uname -m`
-For the purposes of AWS-LC on Envoy, we will only support Linux x86 and aarch64
-if [[("$ARCH" != "x86_64" && "$ARCH" != "aarch64") ]]; then
+# For the purposes of AWS-LC on Envoy, we will only support Linux x86 and aarch64
+if [[ "$OS" != "Linux" || ("$ARCH" != "x86_64" && "$ARCH" != "aarch64") ]]; then
   echo "ERROR: AWS-LC with Envoy is currently supported only on Linux-x86_64 and Linux-aarch64."
   exit 1
 fi
@@ -115,9 +115,9 @@ fi
 
 # Perl
 VERSION=5.31.11
-SHA256=b8c141bd7a6d335600ab0a8a35e75af79f95b837f736456b5532f4d717f20a09 # TODO: change to correct value
-curl -sL0 https://github.com/Perl/perl5/archive/refs/tags/v"$VERSION".tar.gz \
-  && echo "$SHA256" v"$VERSION".tar.gz | sha256sum --check
+SHA256=38c1947780f8e097e337b739aca0225afa7722f90abfa268a1eb03846862c303
+curl -sLO https://github.com/Perl/perl5/archive/refs/tags/v"$VERSION".tar.gz \
+  && echo "$SHA256" perl5-"$VERSION".tar.gz | sha256sum --check
 tar xf perl5-"$VERSION".tar.gz
 cd perl5-"$VERSION"
 ./Configure -des -Dprefix=$HOME/localperl
@@ -131,11 +131,11 @@ if [[ `perl --version | head -2 | tail +2` != "This is perl 5, version 31, subve
 fi
 
 Clean after previous build.
-rm -rf boringssl/build
+rm -rf aws-lc/build
 
-# Build BoringSSL.
-export GOPROXY=https://goproxy.io,direct
-cd boringssl
+# Build AWS-LC.
+export GOPROXY=https://goproxy.io,direct # TODO: Needed on Amazon network, remove if necessary
+cd aws-lc
 mkdir build && cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 ninja
 ninja run_tests
@@ -143,7 +143,7 @@ ninja run_tests
 
 # Move compiled libraries to the expected destinations.
 popd
-mv $ROOT/boringssl/build/crypto/libcrypto.a $1
-mv $ROOT/boringssl/build/ssl/libssl.a $2
+mv $ROOT/aws-lc/build/crypto/libcrypto.a $1
+mv $ROOT/aws-lc/build/ssl/libssl.a $2
 
 echo "BoringSSL built as AWS-LC"
