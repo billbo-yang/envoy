@@ -115,11 +115,11 @@ if [[ `cmake --version | head -n1` != "cmake version $VERSION" ]]; then
 fi
 
 # Clean after previous build.
-rm -rf boringssl/build
+rm -rf aws-lc/build
 
 # Build AWS-LC.
 export GOPROXY=https://goproxy.io,direct # TODO: Needed on Amazon network, remove if necessary
-cd boringssl
+cd aws-lc
 mkdir build && cd build && cmake -GNinja -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain -DCMAKE_BUILD_TYPE=Release ..
 ninja
 ninja run_tests
@@ -127,7 +127,7 @@ ninja run_tests
 
 # Move compiled libraries to the expected destinations.
 popd
-mv $ROOT/boringssl/build/crypto/libcrypto.a $1
-mv $ROOT/boringssl/build/ssl/libssl.a $2
+mv $ROOT/aws-lc/build/crypto/libcrypto.a $1
+mv $ROOT/aws-lc/build/ssl/libssl.a $2
 
 echo "BoringSSL built as AWS-LC"
