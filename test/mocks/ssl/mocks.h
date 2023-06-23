@@ -206,7 +206,7 @@ public:
   MOCK_METHOD(void, unregisterPrivateKeyMethod, (SSL * ssl));
   MOCK_METHOD(bool, checkFips, ());
 
-#ifdef OPENSSL_IS_BORINGSSL
+#if defined(OPENSSL_IS_BORINGSSL) || defined (OPENSSL_IS_AWSLC)
   MOCK_METHOD(BoringSslPrivateKeyMethodSharedPtr, getBoringSslPrivateKeyMethod, ());
 #endif
 };
