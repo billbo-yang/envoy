@@ -20,7 +20,7 @@ class TransportSocketFactoryContext;
 
 namespace Ssl {
 
-#if defined(OPENSSL_IS_BORINGSSL) || defined (OPENSSL_IS_AWSLC)
+#if defined(OPENSSL_IS_BORINGSSL) || defined(OPENSSL_IS_AWSLC)
 using BoringSslPrivateKeyMethodSharedPtr = std::shared_ptr<SSL_PRIVATE_KEY_METHOD>;
 #endif
 
@@ -51,7 +51,7 @@ public:
    */
   virtual bool checkFips() PURE;
 
-#if defined(OPENSSL_IS_BORINGSSL) || defined (OPENSSL_IS_AWSLC)
+#if defined(OPENSSL_IS_BORINGSSL) || defined(OPENSSL_IS_AWSLC)
   /**
    * Get the private key methods from the provider.
    * @return the private key methods associated with this provider and
