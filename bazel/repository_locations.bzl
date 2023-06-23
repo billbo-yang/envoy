@@ -146,7 +146,7 @@ REPOSITORY_LOCATIONS_SPEC = dict(
         license = "Mixed",
         license_url = "https://github.com/aws/aws-lc/blob/v{version}/LICENSE",
         strip_prefix = "aws-lc-{version}",
-        add_preix = "aws-lc",
+        add_prefix = "aws-lc",
     ),
     aspect_bazel_lib = dict(
         project_name = "Aspect Bazel helpers",
