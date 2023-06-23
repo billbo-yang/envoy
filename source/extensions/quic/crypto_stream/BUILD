@@ -42,6 +42,7 @@ envoy_cc_extension(
     deps = select(
         {
             "//bazel:boringssl_fips": [],
+            "//bazel:aws_lc_fips": [],
             "//bazel:boringssl_disabled": [],
             "//conditions:default": [
                 ":envoy_quic_crypto_server_stream_lib",

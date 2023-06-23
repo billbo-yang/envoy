@@ -239,6 +239,7 @@ def envoy_dependencies(skip_targets = []):
     _boringssl()
     _boringssl_fips()
     _aws_lc()
+    _aws_lc_fips()
     native.bind(
         name = "ssl",
         actual = "@envoy//bazel:boringssl",
@@ -370,6 +371,12 @@ def _aws_lc():
     external_http_archive(
         name = "aws_lc",
         build_file = "@envoy//bazel/external:aws_lc.BUILD",
+    )
+
+def _aws_lc_fips():
+    external_http_archive(
+        name = "aws_lc_fips",
+        build_file = "@envoy//bazel/external:aws_lc_fips.BUILD",
     )
 
 def _com_github_circonus_labs_libcircllhist():

@@ -473,6 +473,7 @@ envoy_cc_library(
     # the build until then. Re-enable as part of #7433.
     deps = select({
         "//bazel:boringssl_fips": [],
+        "//bazel:aws_lc_fips": [],
         "//bazel:boringssl_disabled": [],
         "//conditions:default": [
             ":client_codec_lib",
@@ -504,6 +505,7 @@ envoy_cc_library(
     # the build until then. Re-enable as part of #7433.
     deps = select({
         "//bazel:boringssl_fips": [],
+        "//bazel:aws_lc_fips": [],
         "//bazel:boringssl_disabled": [],
         "//conditions:default": [
             ":server_codec_lib",

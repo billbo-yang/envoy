@@ -54,6 +54,7 @@ envoy_cc_extension(
     deps = select(
         {
             "//bazel:boringssl_fips": [],
+            "//bazel:aws_lc_fips": [],
             "//bazel:boringssl_disabled": [],
             "//conditions:default": [
                 ":envoy_deterministic_connection_id_generator_config_lib",

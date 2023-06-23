@@ -37,6 +37,7 @@ envoy_cc_extension(
     deps = select(
         {
             "//bazel:boringssl_fips": [],
+            "//bazel:aws_lc_fips": [],
             "//bazel:boringssl_disabled": [],
             "//conditions:default": [
                 ":fixed_server_preferred_address_config_lib",

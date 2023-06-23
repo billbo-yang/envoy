@@ -18,7 +18,7 @@ fi
 
 # Bazel magic.
 # ROOT=$(dirname $(rootpath boringssl/BUILDING.md))/..
-ROOT=./external/aws_lc
+ROOT=./external/aws_lc_fips
 pushd "$ROOT"
 
 # Build tools (from https://github.com/aws/aws-lc/blob/main/BUILDING.md):
@@ -118,14 +118,20 @@ rm -rf build
 
 # Build AWS-LC.
 export GOPROXY=https://goproxy.io,direct # TODO: Needed on Amazon network, remove if necessary
-mkdir build && cd build && cmake -GNinja -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain -DCMAKE_BUILD_TYPE=Release ..
+mkdir build && cd build && cmake -GNinja -DFIPS=1 -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain -DCMAKE_BUILD_TYPE=Release ..
 ninja
 ninja run_tests
 ./crypto/crypto_test
+
+# Verify correctness of the FIPS build.
+if [[ `tool/bssl isfips` != "1" ]]; then
+  echo "ERROR: AWS-LC tool didn't report FIPS build."
+  exit 1
+fi
 
 # Move compiled libraries to the expected destinations.
 popd
 mv $ROOT/build/crypto/libcrypto.a $1
 mv $ROOT/build/ssl/libssl.a $2
 
-echo "BoringSSL built as AWS-LC"
+echo "BoringSSL built as AWS-LC-FIPS"

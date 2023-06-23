@@ -14,8 +14,8 @@ def envoy_cc_platform_dep(name):
 def envoy_select_boringssl(if_fips, default = None, if_disabled = None):
     return select({
         "@envoy//bazel:boringssl_fips": if_fips,
+        "@envoy//bazel:aws_lc_fips": if_fips,
         "@envoy//bazel:boringssl_disabled": if_disabled or [],
-        "@envoy//bazel:aws_lc": default or [],
         "//conditions:default": default or [],
     })
 

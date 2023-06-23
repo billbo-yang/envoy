@@ -347,6 +347,7 @@ selects.config_setting_group(
     match_any = [
         ":disable_http3_setting",
         ":boringssl_fips",
+        ":aws_lc_fips",
     ],
 )
 
@@ -484,6 +485,14 @@ config_setting(
 )
 
 config_setting(
+    name = "aws_lc_fips",
+    constraint_values = [
+        "@platforms//os:linux",
+    ],
+    values = {"define": "boringssl=aws-lc-fips"},
+)
+
+config_setting(
     name = "boringssl_disabled",
     values = {"define": "boringssl=disabled"},
 )
@@ -535,11 +544,14 @@ config_setting(
 # Alias pointing to the selected version of BoringSSL:
 # - BoringSSL FIPS from @boringssl_fips//:ssl,
 # - non-FIPS BoringSSL from @boringssl//:ssl.
+# - AWS-LC from @aws_lc//:ssl,
+# - AWS-LC-FIPS from @aws_lc_fips//:ssl,
 alias(
     name = "boringssl",
     actual = select({
         "//bazel:boringssl_fips": "@boringssl_fips//:ssl",
         "//bazel:aws_lc": "@aws_lc//:ssl",
+        "//bazel:aws_lc_fips": "@aws_lc_fips//:ssl",
         "//conditions:default": "@boringssl//:ssl",
     }),
 )
@@ -549,6 +561,7 @@ alias(
     actual = select({
         "//bazel:boringssl_fips": "@boringssl_fips//:crypto",
         "//bazel:aws_lc": "@aws_lc//:crypto",
+        "//bazel:aws_lc_fips": "@aws_lc_fips//:crypto",
         "//conditions:default": "@boringssl//:crypto",
     }),
 )
