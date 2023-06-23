@@ -5,8 +5,8 @@ cc_library(
     srcs = [
         "crypto/libcrypto.a",
     ],
-    hdrs = glob(["aws_lc/include/openssl/*.h"]),
-    includes = ["aws_lc/include"],
+    hdrs = glob(["include/openssl/*.h"]),
+    includes = ["include"],
     visibility = ["//visibility:public"],
 )
 
@@ -15,15 +15,15 @@ cc_library(
     srcs = [
         "ssl/libssl.a",
     ],
-    hdrs = glob(["aws_lc/include/openssl/*.h"]),
-    includes = ["aws_lc/include"],
+    hdrs = glob(["include/openssl/*.h"]),
+    includes = ["include"],
     visibility = ["//visibility:public"],
     deps = [":crypto"],
 )
 
 genrule(
     name = "build",
-    srcs = glob(["aws_lc/**"]),
+    srcs = glob(["**"]),
     outs = [
         "crypto/libcrypto.a",
         "ssl/libssl.a",

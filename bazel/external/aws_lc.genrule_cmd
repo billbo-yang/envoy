@@ -115,11 +115,10 @@ if [[ `cmake --version | head -n1` != "cmake version $VERSION" ]]; then
 fi
 
 # Clean after previous build.
-rm -rf aws-lc/build
+rm -rf build
 
 # Build AWS-LC.
 export GOPROXY=https://goproxy.io,direct # TODO: Needed on Amazon network, remove if necessary
-cd aws-lc
 mkdir build && cd build && cmake -GNinja -DCMAKE_TOOLCHAIN_FILE=${HOME}/toolchain -DCMAKE_BUILD_TYPE=Release ..
 ninja
 ninja run_tests
