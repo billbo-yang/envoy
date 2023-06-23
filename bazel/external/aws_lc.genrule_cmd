@@ -126,7 +126,7 @@ ninja run_tests
 
 # Move compiled libraries to the expected destinations.
 popd
-mv $ROOT/aws-lc/build/crypto/libcrypto.a $1
-mv $ROOT/aws-lc/build/ssl/libssl.a $2
+mv $ROOT/build/crypto/libcrypto.a $1
+mv $ROOT/build/ssl/libssl.a $2
 
 echo "BoringSSL built as AWS-LC"
