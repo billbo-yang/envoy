@@ -66,7 +66,7 @@ const std::vector<std::string>& knownCipherSuites() {
                                                     "AES256-SHA",
                                                     "PSK-AES256-CBC-SHA",
                                                     "DES-CBC3-SHA",
-#ifdef(OPENSSL_IS_AWSLC)
+#if defined(OPENSSL_IS_AWSLC)
                                                     "AES128-SHA256",
                                                     "ECDHE-RSA-AES128-SHA256",
 #endif
